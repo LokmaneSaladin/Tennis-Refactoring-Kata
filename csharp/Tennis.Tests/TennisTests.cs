@@ -42,6 +42,7 @@ namespace Tennis.Tests
             new object[] {4, 6, "Win for player2"},
             new object[] {16, 14, "Win for player1"},
             new object[] {14, 16, "Win for player2"},
+            
         };
 
         public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
