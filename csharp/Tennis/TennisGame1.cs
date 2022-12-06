@@ -23,69 +23,16 @@ namespace Tennis
 
         public string GetScore()
         {
-            string score = "";
-            var tempScore = 0;
             if (playerOne.Score == playerTwo.Score)
             {
-                return GetFormattedScoreForEquality(playerOne.Score);
+                return TennisGameHelper.GetFormattedScoreForEquality(playerOne.Score);
             }
             else if (playerOne.Score >= 4 || playerTwo.Score >= 4)
             {
-                return GetFormattedScoreForAdvantageOrWin(playerOne, playerTwo);
+                return TennisGameHelper.GetFormattedScoreForAdvantageOrWin(playerOne , playerTwo);
             }
-            else
-            {
-                score = ((ScoreName)playerOne.Score).ToString() + "-" + ((ScoreName)playerTwo.Score).ToString();
-            }
-            return score;
+            return TennisGameHelper.GetFormattedScore(playerOne, playerTwo);
         }
-
-        private string GetFormattedScoreForEquality(int score)
-        {
-            if (score > 2)
-                return "Deuce";
-
-            return ((ScoreName)score).ToString() + "-All";
-        }
-
-        private string GetFormattedScoreForAdvantageOrWin(Player playerOne, Player playerTwo)
-        {
-            string winOrAdvantage = Math.Abs(playerOne.Score - playerTwo.Score) == 1 ? "Advantage " : "Win for ";
-            string winner = playerOne.Score > playerTwo.Score ? playerOne.Name: playerTwo.Name;
-            
-            return winOrAdvantage + winner;
-        }
-
-    }
-
-
-    public class Player
-    {
-        private string _name;
-        private int _score;
-        
-        public string Name {
-            get { return _name; }
-            set { _name = value; }
-        }
-        
-        public int Score {
-            get { return _score; }
-            set { _score = value; }
-        }
-
-        public Player(string name, int score = 0)
-        {
-            this._name = name;
-            this._score = score;
-        }
-    }
-    public enum ScoreName
-    {
-        Love,
-        Fifteen,
-        Thirty,
-        Forty
     }
 }
 
