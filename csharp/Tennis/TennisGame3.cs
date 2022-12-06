@@ -1,3 +1,5 @@
+using System;
+
 namespace Tennis
 {
     public class TennisGame3 : ITennisGame
@@ -7,6 +9,7 @@ namespace Tennis
         private string p1N;
         private string p2N;
 
+        private string[] _scoreTable = { "Love", "Fifteen", "Thirty", "Forty" };
         public TennisGame3(string player1Name, string player2Name)
         {
             this.p1N = player1Name;
@@ -18,16 +21,15 @@ namespace Tennis
             string s;
             if ((p1 < 4 && p2 < 4) && (p1 + p2 < 6))
             {
-                string[] p = { "Love", "Fifteen", "Thirty", "Forty" };
-                s = p[p1];
-                return (p1 == p2) ? s + "-All" : s + "-" + p[p2];
+                s = _scoreTable[p1];
+                return (p1 == p2) ? s + "-All" : s + "-" + _scoreTable[p2];
             }
             else
             {
                 if (p1 == p2)
                     return "Deuce";
                 s = p1 > p2 ? p1N : p2N;
-                return ((p1 - p2) * (p1 - p2) == 1) ? "Advantage " + s : "Win for " + s;
+                return Math.Abs(p1 - p2) < 2 ? "Advantage " + s : "Win for " + s;
             }
         }
 

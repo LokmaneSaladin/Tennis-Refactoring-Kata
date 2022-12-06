@@ -1,143 +1,78 @@
+using System;
+
 namespace Tennis
 {
     public class TennisGame2 : ITennisGame
     {
-        private int p1point;
-        private int p2point;
-
-        private string p1res = "";
-        private string p2res = "";
-        private string player1Name;
-        private string player2Name;
+        private Player playerOne;
+        private Player playerTwo;
+        private string[] _scoreTable = new string[4] { "Love", "Fifteen", "Thirty", "Forty" };
 
         public TennisGame2(string player1Name, string player2Name)
         {
-            this.player1Name = player1Name;
-            p1point = 0;
-            this.player2Name = player2Name;
+            this.playerOne = new Player(player1Name);
+            this.playerTwo = new Player(player2Name);
         }
 
         public string GetScore()
         {
-            var score = "";
-            if (p1point == p2point && p1point < 3)
+            if (playerOne.Score == playerTwo.Score)
             {
-                if (p1point == 0)
-                    score = "Love";
-                if (p1point == 1)
-                    score = "Fifteen";
-                if (p1point == 2)
-                    score = "Thirty";
-                score += "-All";
+                return (playerOne.Score < 3) ? _scoreTable[playerOne.Score] + "-All" : "Deuce";
             }
-            if (p1point == p2point && p1point > 2)
-                score = "Deuce";
-
-            if (p1point > 0 && p2point == 0)
+            if(playerOne.Score >= 4 || playerTwo.Score >= 4)
             {
-                if (p1point == 1)
-                    p1res = "Fifteen";
-                if (p1point == 2)
-                    p1res = "Thirty";
-                if (p1point == 3)
-                    p1res = "Forty";
-
-                p2res = "Love";
-                score = p1res + "-" + p2res;
+                return GetWinOrAdvatange() + " " + GetGreaterPlayerName();
             }
-            if (p2point > 0 && p1point == 0)
-            {
-                if (p2point == 1)
-                    p2res = "Fifteen";
-                if (p2point == 2)
-                    p2res = "Thirty";
-                if (p2point == 3)
-                    p2res = "Forty";
-
-                p1res = "Love";
-                score = p1res + "-" + p2res;
-            }
-
-            if (p1point > p2point && p1point < 4)
-            {
-                if (p1point == 2)
-                    p1res = "Thirty";
-                if (p1point == 3)
-                    p1res = "Forty";
-                if (p2point == 1)
-                    p2res = "Fifteen";
-                if (p2point == 2)
-                    p2res = "Thirty";
-                score = p1res + "-" + p2res;
-            }
-            if (p2point > p1point && p2point < 4)
-            {
-                if (p2point == 2)
-                    p2res = "Thirty";
-                if (p2point == 3)
-                    p2res = "Forty";
-                if (p1point == 1)
-                    p1res = "Fifteen";
-                if (p1point == 2)
-                    p1res = "Thirty";
-                score = p1res + "-" + p2res;
-            }
-
-            if (p1point > p2point && p2point >= 3)
-            {
-                score = "Advantage player1";
-            }
-
-            if (p2point > p1point && p1point >= 3)
-            {
-                score = "Advantage player2";
-            }
-
-            if (p1point >= 4 && p2point >= 0 && (p1point - p2point) >= 2)
-            {
-                score = "Win for player1";
-            }
-            if (p2point >= 4 && p1point >= 0 && (p2point - p1point) >= 2)
-            {
-                score = "Win for player2";
-            }
-            return score;
+            
+            return GetFormattedScore(playerOne.Score, playerTwo.Score);
         }
 
-        public void SetP1Score(int number)
+        private string GetWinOrAdvatange()
         {
-            for (int i = 0; i < number; i++)
-            {
-                P1Score();
-            }
+            return Math.Abs(playerOne.Score - playerTwo.Score) < 2 ? "Advantage" : "Win for";
         }
 
-        public void SetP2Score(int number)
+        private string GetGreaterPlayerName()
         {
-            for (var i = 0; i < number; i++)
-            {
-                P2Score();
-            }
+            return playerOne.Score > playerTwo.Score ? playerOne.Name : playerTwo.Name;
         }
 
-        private void P1Score()
+        private string GetFormattedScore(int scorePlayerOne, int scorePlayerTwo)
         {
-            p1point++;
+            return _scoreTable[scorePlayerOne] + "-" + _scoreTable[scorePlayerTwo]; ;
         }
 
-        private void P2Score()
+        void ITennisGame.WonPoint(string player)
         {
-            p2point++;
-        }
-
-        public void WonPoint(string player)
-        {
-            if (player == "player1")
-                P1Score();
+            if (player == playerOne.Name)
+                playerOne.Score++;
             else
-                P2Score();
+                playerTwo.Score++;
         }
-
     }
 }
 
+public class Player
+{
+    private string _name;
+    private int _score;
+
+    public string Name
+    {
+        get { return _name; }
+        set { _name = value; }
+    }
+
+    public int Score
+    {
+        get { return _score; }
+        set { _score = value; }
+    }
+
+    public Player(string name, int score = 0)
+    {
+        this._name = name;
+        this._score = score;
+    }
+}
